@@ -18,7 +18,7 @@ Most of the bash usual commands should work as they usually do.
 
 `!!` - execute the last command.
 
-`$?` - prints last command's status.
+`echo $?` - prints last command's status.
 
 `$person = David` - variable decleration.
 
