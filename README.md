@@ -54,7 +54,7 @@ We've also implemented nvaigation through the command history using the UP/DOWN 
 
 
 
-# HowTo Use
+# How To Use
 1. Download this repository.
 2. Extract the files.
 3. Open a terminal in the main directory of the project and execute the following command:
