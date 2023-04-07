@@ -24,8 +24,14 @@ Most of the bash usual commands should work as they usually do.
 
 `>` and `>>` - redirect as usual as in bash.
 
-You can use `|` (pipes) freely.  
+You can use `|` (pipes) freely as you can see in the following video:    
 
+https://user-images.githubusercontent.com/66886354/230582539-709448ae-4288-4740-85df-977cb6cac1af.webm  
+
+   
+     
+      
+### Logic
 You can use logic (e.g. if/else) with the following syntax:
 ```
 if <command>
@@ -50,7 +56,9 @@ hello
 ```
 We've also implemented nvaigation through the command history using the UP/DOWN arrow keys. 
 
-# Video
+# Running Example
+
+https://user-images.githubusercontent.com/66886354/230582545-40a3a4cc-e035-420f-9f58-67b76e164dee.webm
 
 
 
