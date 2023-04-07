@@ -7,6 +7,7 @@ This project is a shell program made as an assignment for advanced programming c
 # Some Possible Commands
 
 Most of the bash usual commands should work as they usually do.
+- In addition we've implemented all of the requierd commands in the assignment
 
 `quit` - exits the shell.
 
@@ -22,7 +23,7 @@ Most of the bash usual commands should work as they usually do.
 
 `$person = David` - variable decleration.
 
-`>` and `>>` - redirect as usual as in bash.
+`>` and `>>` - redirect as usual as in bash (Note, make sure to put space between the command, the redirect, and the name of the file after the redirect)
 
 You can use `|` (pipes) freely as you can see in the following video:    
 
@@ -54,7 +55,7 @@ cmd_helper.c history.c LICENSE main.o   myshell README.md  shell_lib.a  util.c
 cmd_helper.o history.o main.c   Makefile myshell_history shell.h  task1.pdf  util.o
 hello
 ```
-We've also implemented nvaigation through the command history using the UP/DOWN arrow keys. 
+We've also implemented nvaigation through the command history using the UP/DOWN arrow keys, this feature work as in bash - meaning you just need to go up and down between the commands and press `Enter` to execute.
 
 # Running Example
 
