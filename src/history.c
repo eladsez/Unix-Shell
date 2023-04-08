@@ -3,14 +3,15 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <string.h>
+#include <limits.h>
 #include "shell.h"
 
 size_t curr_history = 0;
 size_t char_count = 0;
-extern char *command;
+extern char exact_history_path[PATH_MAX];
 
 int update_history(char *command){
-    int fd = open(BASH_HISTORY, O_WRONLY | O_APPEND, 0644);
+    int fd = open(exact_history_path, O_WRONLY | O_APPEND);
     write(fd, command, strlen(command) * sizeof (char));
     write(fd, "\n", sizeof (char));
     close(fd);
@@ -19,7 +20,7 @@ int update_history(char *command){
 
 int init_history(char *command){
     if (command != NULL) update_history(command);
-    int fd = open(BASH_HISTORY, O_RDONLY | O_CREAT, 0644);
+    int fd = open(exact_history_path, O_RDONLY);
     char c;
     size_t cnt = 0;
     while (read(fd, &c, sizeof (char)) > 0){
@@ -35,7 +36,7 @@ int init_history(char *command){
  * @return 0 on success, -1 otherwise
  */
 int get_history_line(int line_num, char* line_buff){
-    int fd = open(BASH_HISTORY, O_RDONLY | O_CREAT, 0644);
+    int fd = open(exact_history_path, O_RDONLY);
     int cnt = 0;
     char curr;
     while (cnt != line_num && read(fd, &curr, sizeof (char) * 1) > 0){

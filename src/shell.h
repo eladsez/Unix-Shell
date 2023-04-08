@@ -14,7 +14,6 @@
 #define KEY_UP 65
 #define KEY_DOWN 66
 #define DEL_LINE "\x1b[2K"
-#define BASH_HISTORY "myshell_history"
 #define PROMPT "very_unique111"
 #define SPECIAL_KEY_CODE 3
 #define SPECIAL_BS_CODE 127

@@ -1,4 +1,4 @@
-    # Unix-Shell
+# Unix-Shell
 > Made by Elad Seznayev and Nerya Bigon
 
 

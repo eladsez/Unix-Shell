@@ -7,7 +7,6 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
-#include <fcntl.h>
 
 #include "shell.h"
 
@@ -89,56 +88,29 @@ void parse_str(char *str, char **splited, char *parse_by) {
 
 /***
  * This function take array of strings and clean spaces from all the strings from the prefix and suffix
- * if the strings are not statically allocated dont call this function on them !!!
  * @param str_s - the array of strings
  * @param size - the size of the array
  */
 void clean_spaces(char **str_s, size_t size){
     for (int i = 0; i < size; ++i) {
-        for (int j = 0; j < strlen(str_s[i]); ++j){
-            if (str_s[i][j] != ' ') break;
-            str_s[i] = &str_s[i][j];
+        for (int j = 0; j < strlen(str_s[i]); ++j) {
+            if (str_s[i][j] == ' '){
+                for (int k = j; k < strlen(str_s[i]); ++k) {
+                    str_s[i][k] = str_s[i][k + 1];
+                }
+                --j;
+            }
+            else break;
         }
-        for (int j = strlen(str_s[i]) - 1; j >= 0 ; --j){
-            if (str_s[i][j] != ' ') break;
-            str_s[i][j] = '\0';
+    }
+    for (int i = 0; i < size; ++i) {
+        for (int j = strlen(str_s[i]) - 1; j >= 0; --j) {
+            if (str_s[i][j] == ' '){
+                str_s[i][j] = '\0';
+            }
+            else break;
         }
     }
-}
-
-
-/***
- * This is a helper function for input_command function
- * it get a user command trim the spaces from the edges of the command
- * and return the trimmed command
- * @param command
- * @return the return value is a dynamically allocated pointer to the new trimmed command (the given one was free)
- */
-char *trim(char* command){
-
-    printf ("before trimmed: %s\n", command);
-    int start = 0, end = strlen(command) - 1;
-
-    /* find the edges */
-    for (int i = 0; i < strlen(command); ++i) {
-        if (command [i] == ' ') ++start;
-        else break;
-    }
-    for (int i = strlen(command) - 1; i >= 0; --i) {
-        if (command [i] == ' ') --end;
-        else break;
-    }
-
-    char *ret = (char *) malloc(sizeof (char ) * (end - start + 2)); /* + 2 (one for logic one for \0) */
-    for (int i = 0, j = start; j <= end; ++j, ++i){ /* copy the actual string */
-        ret[i] = command[j];
-    }
-
-    ret[end + 1] = '\0';
-
-    free(command);
-    printf("trimmed: %s\n", ret);
-    return ret;
 }
 
 char *dynamic_cpy(char *str){

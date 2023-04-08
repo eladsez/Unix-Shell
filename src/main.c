@@ -6,12 +6,13 @@
 #include <string.h>
 #include <unistd.h>
 #include <signal.h>
+#include <limits.h>
 #include "shell.h"
 
 
 
 extern size_t curr_history;
-
+char exact_history_path[PATH_MAX];
 pid_t main_pid;
 void SIGINT_handler (int sig) {
     if (main_pid != getpid()) exit(0);
@@ -22,6 +23,14 @@ void SIGINT_handler (int sig) {
 int main(){
     main_pid = getpid();
     signal(SIGINT, SIGINT_handler);
+
+    if (getcwd(exact_history_path, PATH_MAX) == NULL){
+        perror("init history path error");
+        exit(1);
+    }
+    strcat(exact_history_path, "/.history");
+    printf("%s\n", exact_history_path);
+
     curr_history = init_history(NULL);
     char *command = NULL, *last_command = NULL;
 

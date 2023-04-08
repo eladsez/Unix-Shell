@@ -242,7 +242,7 @@ int custom_cmd_handle(char *command) {
  * @return
  */
 int amper_check(char *command) {
-    int i = strlen(command) - 1;
+    int i = strlen(command);
     while (i >= 0 && command[i] != '&') --i;
     if (command[i] == '&') {
         for (; i < strlen(command); ++i) command[i] = command[i + 1];
@@ -260,8 +260,9 @@ void set_last_status(pid_t pid) {
     int child_status;
     if (waitpid(pid, &child_status, 0) > 0) {
         last_status = WEXITSTATUS(child_status);
+        if (last_status == 127) printf("ERROR: command not found\n");
     } else {
-        perror("ERROR: waitpid failed in set_last_status");
+        perror("ERROR: waitpid failed in set_last_status\n");
     }
 }
 
@@ -274,7 +275,6 @@ void set_last_status(pid_t pid) {
  * @param command - the command to run
  */
 void simple_exec(char *command, int do_fork) {
-
     redirect_apply(command);
     int custom_commands_ret_code = custom_cmd_handle(command);
     if (custom_commands_ret_code != SKIP_CODE && !do_fork) {
@@ -290,6 +290,7 @@ void simple_exec(char *command, int do_fork) {
     char **splited_exec = (char **) malloc(sizeof(char *) * buff_size);
     parse_str(command, splited_exec, " ");
     splited_exec[buff_size - 1] = NULL;
+
     if (do_fork) {
         int pid = fork();
         if (pid < 0) {
@@ -297,14 +298,14 @@ void simple_exec(char *command, int do_fork) {
             exit(1);
         } else if (pid == 0) {
             execvp(splited_exec[0], splited_exec);
-            exit(1); // in case execvp didnt succeed
+            exit(127); // in case execvp didnt succeed
         }
         set_last_status(pid);
         free(splited_exec);
         redirect_revert();
     } else {
         execvp(splited_exec[0], splited_exec);
-        exit(1); // in case execvp failed
+        exit(127); // in case execvp failed
     }
 }
 
@@ -386,6 +387,7 @@ int amper_exec(char *command) {
             parse_str(command, splited_exec, " ");
             splited_exec[buff_size - 1] = NULL;
             execvp(splited_exec[0], splited_exec);
+            exit(127);
         }
         exit(0);
     } else if (pid > 0) {
@@ -406,16 +408,17 @@ int amper_exec(char *command) {
  */
 void pipe_control(char *command) {
     int comm_size = count_chars(command, '|') + 1;
-    int amper = amper_check(command);
-    if (amper) {
-        if (comm_size > 1){
-            printf("ERROR: | syntax error (can't run background process with pipe)\n");
-            last_status = -1;
-            return;
-        }
-        amper_exec(command);
-        return;
-    }
+
+//    int amper = amper_check(command);
+//    if (amper) {
+//        if (comm_size > 1){
+//            printf("ERROR: | syntax error (can't run background process with pipe)\n");
+//            last_status = -1;
+//            return;
+//        }
+//        amper_exec(command);
+//        return;
+//    }
 
     if (comm_size - 1 == 0) {
         simple_exec(command, TRUE);
