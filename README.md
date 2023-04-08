@@ -15,7 +15,7 @@ This project is a shell program made as an assignment for advanced programming c
 
 # Some Possible Commands
 
-Most of the bash usual commands should work as they usually do.
+All the bash usual commands work as they usually do.
 - In addition, we've implemented all the required custom commands in the assignment
 
 `quit` - exits the shell.
