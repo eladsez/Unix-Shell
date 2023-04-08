@@ -1,6 +1,7 @@
 CC = gcc
 DEBUG = -g -Wall
-LIB_OBJ = cmd_helper.o util.o history.o
+LIB_OBJ = obj/cmd_helper.o obj/util.o obj/history.o
+SHELL_OBJ = obj/main.o obj/shell_lib.a
 # SOURCES = main.c
 
 all:myshell
@@ -8,14 +9,18 @@ all:myshell
 run:myshell
 	./myshell && make clean
 
-myshell: main.o shell_lib.a
-	$(CC) $(DEBUG) main.o shell_lib.a -o myshell
+myshell: $(SHELL_OBJ)
+	$(CC) $(DEBUG) $(SHELL_OBJ) -o myshell
 
-shell_lib.a: $(LIB_OBJ)
-	ar -rcs shell_lib.a $(LIB_OBJ)
+obj/shell_lib.a: $(LIB_OBJ)
+	ar -rcs obj/shell_lib.a $(LIB_OBJ)
 
-%.o: %.c
+obj/%.o: src/%.c obj
 	$(CC) $(DEBUG) -c -o $@ $<
+
+obj:
+	mkdir -p obj
 
 clean:
 	rm -f *.o *.a test* myshell
+	rm -rf obj

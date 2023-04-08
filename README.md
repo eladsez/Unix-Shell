@@ -1,13 +1,22 @@
-# Unix-Shell
+    # Unix-Shell
 > Made by Elad Seznayev and Nerya Bigon
 
 
 This project is a shell program made as an assignment for advanced programming course.
 
+### Project Structure
+
+    .
+    ├── docs                    # Documentation and video files 
+    ├── src                     # Source files
+    ├── obj                     # Auto generated and auto deleted files (using make)
+    ├── LICENSE
+    └── README.md
+
 # Some Possible Commands
 
 Most of the bash usual commands should work as they usually do.
-- In addition we've implemented all of the requierd commands in the assignment
+- In addition, we've implemented all the required custom commands in the assignment
 
 `quit` - exits the shell.
 
@@ -51,11 +60,12 @@ echo hello world
 ```
 Which will result with:
 ```
-cmd_helper.c history.c LICENSE main.o   myshell README.md  shell_lib.a  util.c 
-cmd_helper.o history.o main.c   Makefile myshell_history shell.h  task1.pdf  util.o
+ cmake-build-debug   myshell	       pipe.webm	       src
+ LICENSE	     myshell_history   README.md	       task1.pdf
+ Makefile	     obj	      'running example.webm'
 hello
 ```
-We've also implemented nvaigation through the command history using the UP/DOWN arrow keys, this feature work as in bash - meaning you just need to go up and down between the commands and press `Enter` to execute.
+We've also implemented navigation through the command history using the UP/DOWN arrow keys, this feature work as in bash - meaning you just need to go up and down between the commands and press `Enter` to execute. (not press enter to retrieve the command from history to the shell)
 
 # Running Example
 
