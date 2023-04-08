@@ -246,6 +246,22 @@ int custom_cmd_handle(char *command) {
 }
 
 /**
+ * This function checks if the command ends with & if yes it will remove the & from the command and return 1
+ * otherwise it will return 0
+ * @param command
+ * @return
+ */
+int amper_check(char *command){
+    int i = strlen(command) - 1;
+    while (i >= 0 && command[i] != '&') --i;
+    if (command[i] == '&'){
+        for (; i < strlen(command); ++i) command[i] = command[i + 1];
+        return 1;
+    }
+    return 0;
+}
+
+/**
  * This function is the main function to handle a single command (without pipes)
  * its have tow options
  * 1) running command trough a child process using execvp() and forK() (fork is optional in case of running from rec pipe)

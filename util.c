@@ -77,8 +77,8 @@ int count_chars(char *str, char to_count) {
  * @param parse_by
  */
 void parse_str(char *str, char **splited, char *parse_by) {
-    static char str_cpy[4096]; // must to be static in order to point it with split
-    // if it wont be static it will free after this function and when we do stuff with split array it is segmentation fault
+    static char str_cpy[4096]; // must be static in order to point it with split
+    // if it won't be static it will free after this function and when we do stuff with split array it is segmentation fault
     strcpy(str_cpy, str);
     int index = 0;
     char *temp;
