@@ -25,7 +25,7 @@ char *input_command() {
     size_t com_len = 0; // the actual command size
     while (c != ENTER_KEY) {
 
-        if (c == SPECIAL_KEY_CODE){ // one of the arrows is pressed and brought history with him
+        if (c == SPECIAL_KEY_CODE) { // one of the arrows is pressed and brought history with him
             size_lim = 2;
             com_len = 0;
             command = realloc(command, sizeof(char) * size_lim);
@@ -33,7 +33,7 @@ char *input_command() {
             continue;
         }
 
-        if (c == SPECIAL_BS_CODE){ // someone pressed backspace and remove a char
+        if (c == SPECIAL_BS_CODE) { // someone pressed backspace and remove a char
             if (com_len > 0)
                 --com_len; // remove it also from the buffer
             c = my_getchar();
@@ -70,19 +70,6 @@ int my_read(char *name) {
     char buf[4096];
     if (read(0, buf, 4096) == -1) return -1;
     return setenv(name, buf, 1);
-}
-
-/**
- * set the last status int to the exit code of pid
- * @param pid
- */
-void set_last_status(pid_t pid) {
-    int child_status;
-    if (waitpid(pid, &child_status, 0) > 0) {
-        last_status = WEXITSTATUS(child_status);
-    } else {
-        perror("ERROR: waitpid failed in set_last_status");
-    }
 }
 
 int my_set_env(char *name_val) {
@@ -127,13 +114,14 @@ int echo_cmd(char *to_echo) {
  * its the caller responsibility to reversed the dup of stdout/stdin later from the TEMP_STDOUT_FD/TEMP_STDIN_FD macro
  * @param command
  */
-void redirect_apply(char *command){
+void redirect_apply(char *command) {
     int i;
-    for (i = 0; i < strlen(command); ++i){
-        if (command[i] == '>'){ // this one catch both > and >>
+    for (i = 0; i < strlen(command); ++i) {
+        if (command[i] == '>') { // this one catch both > and >>
             int flag = (command[i + 1] == '>') ? O_APPEND | O_WRONLY : O_WRONLY;
             int move = (command[i + 1] == '>') ? 3 : 2;
-            if (flag == O_WRONLY) unlink(command + i + move); // if the file exist and there is only one > remove the existing one
+            if (flag == O_WRONLY)
+                unlink(command + i + move); // if the file exist and there is only one > remove the existing one
             int fd = open(command + i + move, flag | O_CREAT, 0644);
             dup2(STDOUT_FD, TEMP_STDOUT_FD);
             close(STDOUT_FD);
@@ -142,7 +130,7 @@ void redirect_apply(char *command){
             stdout_revert = TRUE;
             break;
         }
-        if (command[i] == '<'){
+        if (command[i] == '<') {
             int fd = open(command + i + 2, O_RDONLY, 0644);
             dup2(STDIN_FD, TEMP_STDIN_FD);
             close(STDIN_FD);
@@ -151,7 +139,7 @@ void redirect_apply(char *command){
             stdin_revert = TRUE;
             break;
         }
-        if (!strncmp(command + i, "2>", 2)){
+        if (!strncmp(command + i, "2>", 2)) {
             int fd = open(command + i + 3, O_WRONLY | O_CREAT, 0644);
             dup2(STDERR_FD, TEMP_STDERR_FD);
             close(STDERR_FD);
@@ -164,28 +152,29 @@ void redirect_apply(char *command){
     command[i] = '\0';
 }
 
-void redirect_revert(){
-    if (stdout_revert){
+void redirect_revert() {
+    if (stdout_revert) {
         close(STDOUT_FD); // which currently is not the stdout
         dup(TEMP_STDOUT_FD);
         stdout_revert = FALSE;
     }
-    if (stdin_revert){
+    if (stdin_revert) {
         close(STDIN_FD); // which currently is not the stdin
         dup(TEMP_STDIN_FD);
         stdin_revert = FALSE;
     }
-    if (stderr_revert){
+    if (stderr_revert) {
         close(STDERR_FD);
         dup(TEMP_STDERR_FD);
         stderr_revert = FALSE;
     }
 }
 
-int if_session(char *statement){
+int if_session(char *statement) {
 
-    char then[4]; int i = 0;
-    while(i < 4) scanf("%c", &then[i++]);
+    char then[4];
+    int i = 0;
+    while (i < 4) scanf("%c", &then[i++]);
     if (strncmp("then", then, 4)) {
         printf("ERROR with if syntax (expected than got %s)\n", then);
         return -1;
@@ -193,8 +182,9 @@ int if_session(char *statement){
     getchar(); // get '\n'
     char *if_command = input_command();
 
-    char c_else[4]; i = 0;
-    while(i < 4) scanf("%c", &c_else[i++]);
+    char c_else[4];
+    i = 0;
+    while (i < 4) scanf("%c", &c_else[i++]);
     if (strncmp("else", c_else, 4)) {
         printf("ERROR with if syntax (expected else got %s)\n", c_else);
         return -1;
@@ -205,9 +195,9 @@ int if_session(char *statement){
 
     pipe_control(statement);
 
-    if (last_status == 0){
+    if (last_status == 0) {
         pipe_control(if_command);
-    } else{
+    } else {
         pipe_control(else_command);
     }
     free(if_command);
@@ -238,7 +228,7 @@ int custom_cmd_handle(char *command) {
         int ret = chdir(command + 3);
         if (ret) perror("chdir ERROR");
         return ret;
-    } else if (!strncmp("if", command, 2)){
+    } else if (!strncmp("if", command, 2)) {
         return if_session(command + 3);
     }
 
@@ -251,14 +241,28 @@ int custom_cmd_handle(char *command) {
  * @param command
  * @return
  */
-int amper_check(char *command){
+int amper_check(char *command) {
     int i = strlen(command) - 1;
     while (i >= 0 && command[i] != '&') --i;
-    if (command[i] == '&'){
+    if (command[i] == '&') {
         for (; i < strlen(command); ++i) command[i] = command[i + 1];
+        command[++i] = '\0';
         return 1;
     }
     return 0;
+}
+
+/**
+ * set the last status int to the exit code of pid
+ * @param pid
+ */
+void set_last_status(pid_t pid) {
+    int child_status;
+    if (waitpid(pid, &child_status, 0) > 0) {
+        last_status = WEXITSTATUS(child_status);
+    } else {
+        perror("ERROR: waitpid failed in set_last_status");
+    }
 }
 
 /**
@@ -273,10 +277,10 @@ void simple_exec(char *command, int do_fork) {
 
     redirect_apply(command);
     int custom_commands_ret_code = custom_cmd_handle(command);
-    if (custom_commands_ret_code != SKIP_CODE && !do_fork){
+    if (custom_commands_ret_code != SKIP_CODE && !do_fork) {
         exit(custom_commands_ret_code);
     }
-    if (custom_commands_ret_code != SKIP_CODE){
+    if (custom_commands_ret_code != SKIP_CODE) {
         last_status = custom_commands_ret_code;
         redirect_revert();
         return;
@@ -298,8 +302,7 @@ void simple_exec(char *command, int do_fork) {
         set_last_status(pid);
         free(splited_exec);
         redirect_revert();
-    }
-    else{
+    } else {
         execvp(splited_exec[0], splited_exec);
         exit(1); // in case execvp failed
     }
@@ -368,6 +371,32 @@ int rec_pipe(char *commands[], int size) {
 }
 
 /**
+ * This function is the main function to handle a command with & at the end
+ * its exactly the same as simple_exec but it will run the command in a child process
+ * without waiting for it to finish with the set_last_status function
+ * (i didnt had power to make change to the simple_exec function to make it work with &)
+ * @param command
+ */
+int amper_exec(char *command) {
+    pid_t pid = fork();
+    if (pid == 0) {
+        if (custom_cmd_handle(command) == SKIP_CODE) {
+            unsigned int buff_size = count_chars(command, ' ') + 2;// +2 for the NULL
+            char **splited_exec = (char **) malloc(sizeof(char *) * buff_size);
+            parse_str(command, splited_exec, " ");
+            splited_exec[buff_size - 1] = NULL;
+            execvp(splited_exec[0], splited_exec);
+        }
+        exit(0);
+    } else if (pid > 0) {
+        return 0;
+    } else {
+        perror("ERROR: fork failed in amper_exec");
+        return -1;
+    }
+}
+
+/**
  * This is the main pipe handling function it takes the command and check if it contain a pipeline
  * if no - just run the command using simple_exec func
  *, 0 if yes - parse by '|' the command to a commands array then call rec_pipe func on it
@@ -377,11 +406,22 @@ int rec_pipe(char *commands[], int size) {
  */
 void pipe_control(char *command) {
     int comm_size = count_chars(command, '|') + 1;
+//    int amper = amper_check(command);
+//    if (amper) {
+//        if (comm_size > 1){
+//            printf("ERROR: | syntax error (can't run background process with pipe)\n");
+//            last_status = -1;
+//            return;
+//        }
+//        amper_exec(command);
+//        return;
+//    }
 
     if (comm_size - 1 == 0) {
         simple_exec(command, TRUE);
         return;
     }
+
     char **commands = (char **) malloc(sizeof(char *) * comm_size);
     parse_str(command, commands, "|");
     clean_spaces(commands, comm_size);

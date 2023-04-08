@@ -1,14 +1,14 @@
 CC = gcc
-DEBUG = -g
+DEBUG = -g -Wall
 LIB_OBJ = cmd_helper.o util.o history.o
 # SOURCES = main.c
 
-all:shell
+all:myshell
 
-run:shell
+run:myshell
 	./myshell && make clean
 
-shell: history.o util.o cmd_helper.o shell_lib.a main.o
+myshell: main.o shell_lib.a
 	$(CC) $(DEBUG) main.o shell_lib.a -o myshell
 
 shell_lib.a: $(LIB_OBJ)

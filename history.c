@@ -95,7 +95,7 @@ int sanity_check(char c){
                 return FALSE;
             case 'D':    // key left
 //                printf("\033[1D");
-                return FALSE; /*// TODO: <======  need to implement */
+                return FALSE; /* TODO: <======  need to implement */
         }
     }
     if (c == 127) {
