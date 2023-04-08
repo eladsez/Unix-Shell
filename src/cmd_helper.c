@@ -382,6 +382,7 @@ int amper_exec(char *command) {
     pid_t pid = fork();
     if (pid == 0) {
         if (custom_cmd_handle(command) == SKIP_CODE) {
+            clean_spaces(&command, 1);
             unsigned int buff_size = count_chars(command, ' ') + 2;// +2 for the NULL
             char **splited_exec = (char **) malloc(sizeof(char *) * buff_size);
             parse_str(command, splited_exec, " ");
@@ -409,16 +410,15 @@ int amper_exec(char *command) {
 void pipe_control(char *command) {
     int comm_size = count_chars(command, '|') + 1;
 
-//    int amper = amper_check(command);
-//    if (amper) {
-//        if (comm_size > 1){
-//            printf("ERROR: | syntax error (can't run background process with pipe)\n");
-//            last_status = -1;
-//            return;
-//        }
-//        amper_exec(command);
-//        return;
-//    }
+    int amper = amper_check(command);
+    if (amper) {
+        if (comm_size > 1){
+            printf("ERROR: | syntax error (can't run background process with pipe)\n");
+            last_status = -1;
+        }
+        else amper_exec(command);
+        return;
+    }
 
     if (comm_size - 1 == 0) {
         simple_exec(command, TRUE);
