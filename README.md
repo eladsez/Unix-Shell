@@ -20,21 +20,21 @@ All the bash usual commands work as they usually do.
 
 `quit` - exits the shell.
 
-`echo` - prints what ever comes after the `echo`.
-
 `cd` - change directory.  
-
-`ls` - list the content of the current directory.
 
 `!!` - execute the last command.
 
 `echo $?` - prints last command's status.
 
-`$person = David` - variable decleration.
+`$person = David` - variable declaration, also support change prompt with `prompt = <new prompt>` .
 
-`>` and `>>` - redirect as usual as in bash (Note, make sure to put space between the command, the redirect, and the name of the file after the redirect)
+`read person` - wait for the user to input the person variable.
 
-You can use `|` (pipes) freely as you can see in the following video:    
+`echo` - prints what ever comes after the echo including variable as `echo $person`.
+
+ `2>`, `>`, `>>` and `<` - redirect as usual as in bash (Note, make sure to put space between the command, the redirect, and the name of the file after the redirect)
+
+You can use `|` pipe freely as you can see in the following video:    
 
 https://user-images.githubusercontent.com/66886354/230582539-709448ae-4288-4740-85df-977cb6cac1af.webm  
 
@@ -43,7 +43,8 @@ https://user-images.githubusercontent.com/66886354/230582539-709448ae-4288-4740-
       
 ### Logic
 You can use logic (e.g. if/else) with the following syntax:
-```
+
+``` 
 if <command>
 then
 <command>

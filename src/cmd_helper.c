@@ -61,14 +61,15 @@ char *input_command() {
         exit(1);
     }
 
-//    return trim(command);
     return command;
 }
 
 
 int my_read(char *name) {
     char buf[4096];
-    if (read(0, buf, 4096) == -1) return -1;
+    int actual;
+    if ((actual = read(0, buf, 4096)) == -1) return -1;
+    buf[actual - 1] = '\0';
     return setenv(name, buf, 1);
 }
 
@@ -424,12 +425,14 @@ void pipe_control(char *command) {
         simple_exec(command, TRUE);
         return;
     }
-
     char **commands = (char **) malloc(sizeof(char *) * comm_size);
+
     parse_str(command, commands, "|");
+
     clean_spaces(commands, comm_size);
+
     int pipe = rec_pipe(commands, comm_size - 2);
-    int pid = fork();
+    int pid = fork(); // just to make sure we dont run an empty command
     if (pid < 0) {
         perror("ERROR with exec fork");
         last_status = 127;

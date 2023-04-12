@@ -29,7 +29,6 @@ int main(){
         exit(1);
     }
     strcat(exact_history_path, "/.history");
-    printf("%s\n", exact_history_path);
 
     curr_history = init_history(NULL);
     char *command = NULL, *last_command = NULL;

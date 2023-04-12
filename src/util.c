@@ -93,6 +93,7 @@ void parse_str(char *str, char **splited, char *parse_by) {
  */
 void clean_spaces(char **str_s, size_t size){
     for (int i = 0; i < size; ++i) {
+        if (str_s[i] == NULL) continue;
         for (int j = 0; j < strlen(str_s[i]); ++j) {
             if (str_s[i][j] == ' '){
                 for (int k = j; k < strlen(str_s[i]); ++k) {
@@ -104,6 +105,7 @@ void clean_spaces(char **str_s, size_t size){
         }
     }
     for (int i = 0; i < size; ++i) {
+        if (str_s[i] == NULL) continue;
         for (int j = strlen(str_s[i]) - 1; j >= 0; --j) {
             if (str_s[i][j] == ' '){
                 str_s[i][j] = '\0';
