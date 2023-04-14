@@ -180,27 +180,26 @@ int if_session(char *statement) {
     }
     free(then);
     char *if_command = input_command();
+    char *else_command;
 
     char *c_else = input_command();
-
-    if (strncmp("else", c_else, 4)) {
-        printf("ERROR with if syntax (expected else got %s)\n", c_else);
-        free(c_else);
-        return -1;
+    int f_else = 0;
+    if (!strncmp("else", c_else, 4)) {
+        f_else = 1;
+        else_command = input_command();
     }
-    free(c_else);
 
-    char *else_command = input_command();
+    free(c_else);
 
     pipe_control(statement);
 
     if (last_status == 0) {
         pipe_control(if_command);
-    } else {
+        free(if_command);
+    } else if (f_else) {
         pipe_control(else_command);
+        free(else_command);
     }
-    free(if_command);
-    free(else_command);
     return 0;
 }
 

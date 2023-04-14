@@ -1,0 +1,140 @@
+(base) or@anidjar:~/Desktop/Unix-Shell$ make all
+mkdir -p obj
+gcc -g -Wall -c -o obj/main.o src/main.c
+gcc -g -Wall -c -o obj/cmd_helper.o src/cmd_helper.c
+gcc -g -Wall -c -o obj/util.o src/util.c
+gcc -g -Wall -c -o obj/history.o src/history.c
+ar -rcs obj/shell_lib.a obj/cmd_helper.o obj/util.o obj/history.o
+gcc -g -Wall obj/main.o obj/shell_lib.a -o myshell
+(base) or@anidjar:~/Desktop/Unix-Shell$ ./myshell 
+λ:/home/or/Desktop/Unix-Shell$ ls -l
+total 72
+drwxrwxr-x 2 or or  4096 Apr 13 21:45 docs
+-rw-rw-r-- 1 or or  1071 Apr  3 09:30 LICENSE
+-rw-rw-r-- 1 or or   500 Apr 13 21:45 Makefile
+-rwxrwxr-x 1 or or 41128 Apr 13 21:46 myshell
+-rw-r--r-- 1 or or    15 Apr  7 12:40 myshell_history
+drwxrwxr-x 2 or or  4096 Apr 13 21:46 obj
+-rw-rw-r-- 1 or or  2431 Apr 13 21:45 README.md
+drwxrwxr-x 2 or or  4096 Apr 13 21:45 src
+λ:/home/or/Desktop/Unix-Shell$ ls -l &
+λ:/home/or/Desktop/Unix-Shell$ total 72
+drwxrwxr-x 2 or or  4096 Apr 13 21:45 docs
+-rw-rw-r-- 1 or or  1071 Apr  3 09:30 LICENSE
+-rw-rw-r-- 1 or or   500 Apr 13 21:45 Makefile
+-rwxrwxr-x 1 or or 41128 Apr 13 21:46 myshell
+-rw-r--r-- 1 or or    15 Apr  7 12:40 myshell_history
+drwxrwxr-x 2 or or  4096 Apr 13 21:46 obj
+-rw-rw-r-- 1 or or  2431 Apr 13 21:45 README.md
+drwxrwxr-x 2 or or  4096 Apr 13 21:45 src
+            
+λ:/home/or/Desktop/Unix-Shell$ ls -l > file
+λ:/home/or/Desktop/Unix-Shell$ ls
+docs  file  LICENSE  Makefile  myshell	myshell_history  obj  README.md  src
+λ:/home/or/Desktop/Unix-Shell$ ls -l nofile 2> mylog
+λ:/home/or/Desktop/Unix-Shell$ ls -l >> mylog
+ls: cannot access '>> mylog': No such file or directory
+λ:/home/or/Desktop/Unix-Shell$ ls
+docs  file  LICENSE  Makefile  mylog  myshell  myshell_history	obj  README.md	src
+λ:/home/or/Desktop/Unix-Shell$ ls -l >> mylog
+λ:/home/or/Desktop/Unix-Shell$ echo hello world
+hello world
+λ:/home/or/Desktop/Unix-Shell$ echo $?
+0
+λ:/home/or/Desktop/Unix-Shell$ cd ..
+λ:/home/or/Desktop$    
+λ:/home/or/Desktop$ 
+λ:/home/or/Desktop$ cd Unix-Shell\
+ERROR: command not found
+λ:/home/or/Desktop$ cd Unix-Shell
+λ:/home/or/Desktop/Unix-Shell$ echo hey
+hey
+λ:/home/or/Desktop/Unix-Shell$ !!
+hey
+λ:/home/or/Desktop/Unix-Shell$ ls | grep file
+file
+Makefile
+λ:/home/or/Desktop/Unix-Shell$ You typed Control-C!
+
+λ:/home/or/Desktop/Unix-Shell$ $person = David
+λ:/home/or/Desktop/Unix-Shell$ echo person
+person
+λ:/home/or/Desktop/Unix-Shell$ echo $person
+David
+λ:/home/or/Desktop/Unix-Shell$ if date
+then
+echo hello
+else
+echo hello world
+Thu 13 Apr 2023 21:57:44 IDT
+hello
+λ:/home/or/Desktop/Unix-Shell$
+λ:/home/or/Desktop/Unix-Shell$ date >> myfile
+λ:/home/or/Desktop/Unix-Shell$ cat myfile
+Thu 13 Apr 2023 22:02:29 IDT
+λ:/home/or/Desktop/Unix-Shell$
+λ:/home/or/Desktop/Unix-Shell$ date -u >> myfile
+λ:/home/or/Desktop/Unix-Shell$ cat myfile
+Thu 13 Apr 2023 19:12:33 UTC
+λ:/home/or/Desktop/Unix-Shell$
+λ:/home/or/Desktop/Unix-Shell$ wc -l < myfile
+1 myfile
+λ:/home/or/Desktop/Unix-Shell$ prompt = hi
+hi mkdir mydir
+hi cd mydir
+hi pwd
+/home/or/Desktop/Unix-Shell/mydir
+hi touch file1 file2 file3 
+hi ls
+file1  file2  file3
+hi !!
+file1  file2  file3
+hi echo abc xyz
+abc xyz
+hi ls
+file1  file2  file3
+hi echo $? 
+0
+hi ls no_such_file 2> file
+hi You typed Control-C!
+hi ls
+file  file1  file2  file3
+hi cat > colors.txt
+blue
+black
+red
+red
+green
+blue
+green
+red
+red
+blue
+hi cat colors.txt
+blue
+black
+red
+red
+green
+blue
+green
+red
+red
+blue
+hi cat colors.txt | cat | cat | cat
+blue
+black
+red
+red
+green
+blue
+green
+red
+red
+blue
+hi sort colors.txt | uniq -c | sort -r | head -3
+      4 red
+      3 blue
+      2 green
+hi quit
+(base) or@anidjar:~/Desktop/Unix-Shell$
