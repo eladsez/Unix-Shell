@@ -60,7 +60,6 @@ char *input_command() {
         perror("realloc ERROR");
         exit(1);
     }
-
     return command;
 }
 
@@ -172,25 +171,24 @@ void redirect_revert() {
 }
 
 int if_session(char *statement) {
-
-    char then[4];
-    int i = 0;
-    while (i < 4) scanf("%c", &then[i++]);
+    char *then;
+    then = input_command();
     if (strncmp("then", then, 4)) {
         printf("ERROR with if syntax (expected than got %s)\n", then);
+        free(then);
         return -1;
     }
-    getchar(); // get '\n'
+    free(then);
     char *if_command = input_command();
 
-    char c_else[4];
-    i = 0;
-    while (i < 4) scanf("%c", &c_else[i++]);
+    char *c_else = input_command();
+
     if (strncmp("else", c_else, 4)) {
         printf("ERROR with if syntax (expected else got %s)\n", c_else);
+        free(c_else);
         return -1;
     }
-    getchar(); // get '\n'
+    free(c_else);
 
     char *else_command = input_command();
 
@@ -214,7 +212,6 @@ int if_session(char *statement) {
  * @return
  */
 int custom_cmd_handle(char *command) {
-
     if (*command == '$') {
         int ret = my_set_env(command + 1);
         if (ret) perror("ERROR in $ assigment");
@@ -229,10 +226,7 @@ int custom_cmd_handle(char *command) {
         int ret = chdir(command + 3);
         if (ret) perror("chdir ERROR");
         return ret;
-    } else if (!strncmp("if", command, 2)) {
-        return if_session(command + 3);
     }
-
     return SKIP_CODE;
 }
 
@@ -409,6 +403,12 @@ int amper_exec(char *command) {
  * @param command
  */
 void pipe_control(char *command) {
+
+    if (strncmp(command, "if ", 3) == 0) {
+        if_session(command + 3);
+        return;
+    }
+
     int comm_size = count_chars(command, '|') + 1;
 
     int amper = amper_check(command);

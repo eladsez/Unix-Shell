@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <string.h>
+#include <stdlib.h>
 #include <limits.h>
 #include "shell.h"
 
@@ -117,16 +118,25 @@ int sanity_check(char c){
 int my_getchar(){
     struct termios oldattr, newattr;
     int ch;
+    int err;
     tcgetattr( 0, &oldattr); // get terminal setting
     newattr = oldattr;
     newattr.c_lflag &= ~(ICANON | ECHO);  // set terminal setting to no canonical and no echo
-    tcsetattr(0, TCSANOW, &newattr); // set terminal setting to no canonical and no echo
+    err = tcsetattr(0, TCSANOW, &newattr); // set terminal setting to no canonical and no echo
+    if (err == -1) {
+        fprintf(stderr, "tcsetattr error when setting terminal to no canonical and no echo\n");
+        exit(1);
+    }
     ch = getchar(); // get the char (this one return immediately and dont wait for \n)
     int check;
     while(!(check = sanity_check(ch))){
         ch = getchar();
     }
-    tcsetattr(0, TCSANOW, &oldattr); // retrieve the last terminal setting
+    err = tcsetattr(0, TCSANOW, &oldattr); // retrieve the last terminal setting
+    if (err == -1) {
+        fprintf(stderr, "tcsetattr error when retrieving the previous terminal setting\n");
+        exit(1);
+    }
     if (check == SPECIAL_BS_CODE || check == SPECIAL_KEY_CODE) return check;
     ++char_count;
     printf("%c", ch);
