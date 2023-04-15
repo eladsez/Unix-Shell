@@ -68,9 +68,9 @@ hello
 ```
 Or alternatively (our implementation also supports this syntax):
 ```
-if ls
+if <command>
 then
-echo hello
+<command>
 fi
 ```
 Which will result with the same output.
