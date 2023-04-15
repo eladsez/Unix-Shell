@@ -66,6 +66,16 @@ Which will result with:
  Makefile	     obj	      'running example.webm'
 hello
 ```
+Or alternatively (our implementation also supports this syntax):
+```
+if ls
+then
+echo hello
+fi
+```
+Which will result with the same output.
+
+
 We've also implemented navigation through the command history using the UP/DOWN arrow keys, this feature work as in bash - meaning you just need to go up and down between the commands and press `Enter` to execute. (not press enter to retrieve the command from history to the shell)
 
 # Running Example

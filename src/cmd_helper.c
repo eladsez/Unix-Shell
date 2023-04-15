@@ -182,14 +182,19 @@ int if_session(char *statement) {
     char *if_command = input_command();
     char *else_command;
 
-    char *c_else = input_command();
+    char *fi_else = input_command();
     int f_else = 0;
-    if (!strncmp("else", c_else, 4)) {
+    if (!strncmp("else", fi_else, 4)) {
         f_else = 1;
         else_command = input_command();
     }
+    else if (strncmp("fi", fi_else, 2)) {
+        printf("ERROR with if syntax (expected fi or else got %s)\n", fi_else);
+        free(fi_else);
+        return -1;
+    }
 
-    free(c_else);
+    free(fi_else);
 
     pipe_control(statement);
 
