@@ -50,6 +50,7 @@ then
 <command>
 else
 <command>
+fi
 ```
 For example:  
 ```
